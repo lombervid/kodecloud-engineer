@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: iron-namespace-datacenter
+  name: iron-db-deployment-datacenter
+  labels:
+    db: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      db: mariadb
+  template:
+    metadata:
+      labels:
+        db: mariadb
+    spec:
+      containers:
+        - name: iron-db-container-datacenter
+          image: kodekloud/irondb:2.0
+          volumeMounts:
+            - name: db
+              mountPath: /var/lib/mysql
+          env:
+            - name: MYSQL_DATABASE
+              value: database_host
+            - name: MYSQL_ROOT_PASSWORD
+              value: "aASDF34%@#$%sdfg"
+            - name: MYSQL_USER
+              value: gallery_user
+            - name: MYSQL_PASSWORD
+              value: "1r0ng4ll3ry"
+      volumes:
+        - name: db
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: iron-namespace-datacenter
+  name: iron-db-service-datacenter
+spec:
+  type: ClusterIP
+  selector:
+    db: mariadb
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
