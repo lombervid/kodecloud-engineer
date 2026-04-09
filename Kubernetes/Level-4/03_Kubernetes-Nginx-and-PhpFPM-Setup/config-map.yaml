@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    events {}
+
+    http {
+        server {
+            listen 8098;
+            root /var/www/html;
+            index  index.html index.htm index.php;
+        }
+    }
